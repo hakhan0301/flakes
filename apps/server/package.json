@@ -10,6 +10,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "node-vite": "^0.0.0-alpha.0"
+    "vite-node": "^0.15.1"
+  },
+  "dependencies": {
+    "@cereal/env": "^1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "node-cron": "^3.0.1"
   }
 }
