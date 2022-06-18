@@ -6,11 +6,11 @@ dotEnv.config({
 });
 
 interface EnvVars {
-  API_PORT: string;
+  API_PORT: number;
 }
 
 const envVars: EnvVars = {
-  API_PORT: process.env.API_PORT as string,
+  API_PORT: parseInt(process.env.API_PORT as string, 10),
 };
 
 export default envVars;

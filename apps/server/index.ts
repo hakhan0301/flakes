@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import ENV from '@cereal/env';
-
+import { prisma } from '@cereal/db';
 
 const app = express();
 
