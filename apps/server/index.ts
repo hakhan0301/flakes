@@ -8,10 +8,21 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-app.get("/sussy", (req, res) => {
-
+app.get("/jobs", async (req, res) => {
+  const cronJobs = await prisma.cronJob.findMany();
+  res.json(cronJobs);
 });
+
+app.post('/jobs', async (req, res) => {
+  const cronJob = req.body;
+
+  await prisma.cronJob.create({
+    data: cronJob
+  });
+
+  res.send("okay");
+});
+
 
 
 app.listen(ENV.API_PORT, () => {

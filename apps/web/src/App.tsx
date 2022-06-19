@@ -1,36 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 interface Cron {
   title: string;
-  cronTime: string;
+  time: string;
   URL: string;
 }
-
-const initialCronJobs: Cron[] = [
-  {
-    title: "Daily",
-    cronTime: "0 0 0 * * *",
-    URL: "http://localhost:3000/daily",
-  },
-  {
-    title: "Weekly",
-    cronTime: "0 0 0 * * 0",
-    URL: "http://localhost:3000/weekly",
-  },
-  {
-    title: "Monthly",
-    cronTime: "0 0 0 1 * *",
-    URL: "http://localhost:3000/monthly",
-  },
-];
 
 function CronJob(props: Cron) {
   return (
     <div className="max-w-lg w-full flex flex-col flex-grow">
       <div className="w-full p-2 bg-white">
         <h3 className="text-3xl">{props.title}</h3>
-        <p className="px-4">{props.cronTime}</p>
+        <p className="px-4">{props.time}</p>
         <p className="px-4">{props.URL}</p>
       </div>
     </div>
@@ -38,14 +20,29 @@ function CronJob(props: Cron) {
 }
 
 function App() {
-  const [cronJobs, setCronJobs] = useState<Cron[]>(initialCronJobs);
+  const [cronJobs, setCronJobs] = useState<Cron[]>([]);
   const [title, setTitle] = useState("");
   const [time, setTime] = useState("");
   const [url, setUrl] = useState("");
 
-  function submitCronJob(event: React.FormEvent) {
+  useEffect(() => {
+    async function getCronJobs() {
+      const res = await fetch("http://localhost:8000/jobs");
+      const data = await res.json();
+
+      setCronJobs(data);
+    }
+    getCronJobs();
+  }, []);
+
+  async function submitCronJob(event: React.FormEvent) {
     event.preventDefault();
-    const cron: Cron = { title: title, cronTime: time, URL: url };
+    const cron: Cron = { title: title, time: time, URL: url };
+    await fetch("http://localhost:8000/jobs", {
+      method: "POST",
+      body: JSON.stringify(cron),
+      headers: { "Content-Type": "application/json" }
+    })
     setCronJobs([...cronJobs, cron]);
   }
 
@@ -57,7 +54,7 @@ function App() {
           <h1 className="text-3xl font-bold">Cereal - CRON Server</h1>
         </div>
 
-        <form className="flex flex-col items-center" onSubmit={submitCronJob}>
+        <form className="flex flex-col gap-1 items-center" onSubmit={submitCronJob}>
           <label>Job Title:</label>
           <input
             type="text"
