@@ -12,13 +12,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
+function CronJob({ title, cron, url }: CronJob) {
+  return (
+    <div>
+      <p>{title}</p>
+      <p>{url}</p>
+      <p>{cron}</p>
+    </div>
+  );
+}
+
 interface Props {
   jobs: CronJob[]
 };
 const Home: NextPage<Props> = ({ jobs }) => {
   return (
     <pre>
-      {JSON.stringify(jobs)}
+      {jobs.map(job => <CronJob key={job.title} {...job} />)}
     </pre>
   )
 }
