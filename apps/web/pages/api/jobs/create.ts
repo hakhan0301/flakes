@@ -4,6 +4,7 @@ import cronJoi from 'joi-cron-expression';
 import _Joi from 'joi';
 import { endointWrapper, validator } from "@flakes/api-helpers";
 import { prisma } from '@flakes/db';
+import { scheduleCronJob } from '@flakes/cron-server';
 
 const Joi = cronJoi(_Joi);
 
@@ -27,6 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       cron: body.cron,
       url: body.url,
     }
-  })
+  });
+  scheduleCronJob(body);
   res.json('Success');
 }

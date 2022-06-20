@@ -8,5 +8,8 @@
   "version": "1.0.0",
   "description": "",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@flakes/cron-server": "file:packages/cron-server"
+  }
 }

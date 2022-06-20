@@ -4,6 +4,7 @@ import cronJoi from 'joi-cron-expression';
 import _Joi from 'joi';
 import { endointWrapper, validator } from "@flakes/api-helpers";
 import { prisma } from '@flakes/db';
+import { removeCronJob } from '@flakes/cron-server';
 
 const Joi = cronJoi(_Joi);
 
@@ -21,6 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const body = JSON.parse(req.body);
   await prisma.cronJob.delete({
     where: { title: body.title }
-  })
+  });
+  removeCronJob(body.title);
   res.json('Success');
 }

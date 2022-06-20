@@ -9,6 +9,9 @@ interface CronJobDict {
 const runningCronJobs: CronJobDict = {};
 
 export const scheduleCronJob = (cronJob: CronJob) => {
+  console.log('scheduled: ', cronJob.title);
+
+
   const task = cron.schedule(cronJob.cron, async () => {
     const res = await fetch(cronJob.url);
 
@@ -16,6 +19,8 @@ export const scheduleCronJob = (cronJob: CronJob) => {
     console.log(`${cronJob.title} cron job executed`);
     console.log(json);
   });
+
+  task.start();
 
   runningCronJobs[cronJob.title] = task;
 }
