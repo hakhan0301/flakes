@@ -1,5 +1,5 @@
 {
-  "name": "cereal",
+  "name": "flakes",
   "workspaces": [
     "apps/*",
     "packages/*",

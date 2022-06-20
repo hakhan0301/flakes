@@ -1,5 +1,5 @@
 {
-  "name": "@cereal/web",
+  "name": "@flakes/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cereal/api-helpers": "^1.0.0",
-    "@cereal/db": "^1.0.0",
+    "@flakes/api-helpers": "^1.0.0",
+    "@flakes/db": "^1.0.0",
     "add": "^2.0.6",
     "joi": "^17.6.0",
     "joi-cron-expression": "^1.0.1",

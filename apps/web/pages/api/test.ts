@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Joi from 'joi';
-import { endointWrapper, validator } from "@cereal/api-helpers";
+import { endointWrapper, validator } from "@flakes/api-helpers";
 
 const bodySchema = Joi.object({
   a: Joi.string().required(),

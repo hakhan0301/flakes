@@ -1,6 +1,6 @@
 import type { NextPage, GetServerSideProps } from 'next'
-import type { CronJob } from '@cereal/db/types'
-import { prisma } from '@cereal/db'
+import type { CronJob } from '@flakes/db/types'
+import { prisma } from '@flakes/db'
 
 import { FaCheck } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io'
@@ -146,7 +146,7 @@ const Home: NextPage<Props> = ({ jobs: _jobs }) => {
         <div className='flex md:flex-row items-center p-6'>
           <div className='flex flex-row gap-4 items-center'>
             <p className='text-3xl font-bold font-mono'>
-              Cereal
+              Flakes
             </p>
             <span className='text-xl font-bold font-mono'>
               -

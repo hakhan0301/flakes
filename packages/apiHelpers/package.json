@@ -1,5 +1,5 @@
 {
-  "name": "@cereal/api-helpers",
+  "name": "@flakes/api-helpers",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
