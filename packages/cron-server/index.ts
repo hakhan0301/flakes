@@ -31,10 +31,8 @@ export const removeCronJob = async (title: string) => {
   delete runningCronJobs[title];
 }
 
-const setupServer = async () => {
+export const startupCronServer = async () => {
   const cronJobs = await prisma.cronJob.findMany();
 
   cronJobs.forEach(scheduleCronJob);
 }
-
-setupServer();
