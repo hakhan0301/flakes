@@ -8,9 +8,7 @@ datasource db {
 }
 
 model CronJob {
-  id Int @id @default(autoincrement())
-
-  title String
-  time  String
-  URL   String
+  title String @unique
+  cron  String
+  url   String
 }
