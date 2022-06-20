@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@flakes/api-helpers": "^1.0.0",
     "@flakes/db": "^1.0.0",
     "add": "^2.0.6",
     "joi": "^17.6.0",
