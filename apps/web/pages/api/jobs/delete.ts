@@ -18,7 +18,7 @@ export default endointWrapper()
   .post(handler);
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const body = req.body;
+  const body = JSON.parse(req.body);
   await prisma.cronJob.delete({
     where: { title: body.title }
   })

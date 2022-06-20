@@ -21,7 +21,7 @@ interface ValidatorInput {
 }
 export const validator = (schema: ValidatorInput) =>
   (req: NextApiRequest, res: NextApiResponse, next: NextHandler) => {
-    const { error: bodyError } = schema.body.validate(req.body);
+    const { error: bodyError } = schema.body.validate(JSON.parse(req.body));
     if (bodyError) {
       res.statusCode = 400;
       res.end(bodyError.message);
