@@ -1,5 +1,8 @@
-import nc from "next-connect";
+import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextHandler } from "next-connect";
 
+import nc from "next-connect";
+import Joi from 'joi';
 export const endointWrapper = () => nc({
   onError: (err, req, res, next) => {
     console.error(err.stack);
@@ -11,3 +14,17 @@ export const endointWrapper = () => nc({
     res.end(`Method: ${req.method} not found.`);
   },
 });
+
+
+interface ValidatorInput {
+  body: Joi.ObjectSchema
+}
+export const validator = (schema: ValidatorInput) =>
+  (req: NextApiRequest, res: NextApiResponse, next: NextHandler) => {
+    const { error: bodyError } = schema.body.validate(req.body);
+    if (bodyError) {
+      res.statusCode = 400;
+      res.end(bodyError.message);
+    }
+    next();
+  }

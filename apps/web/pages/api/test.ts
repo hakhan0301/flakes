@@ -1,8 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import nc from "next-connect";
-import { endointWrapper } from "@cereal/api-helpers"
+import Joi from 'joi';
+import { endointWrapper, validator } from "@cereal/api-helpers";
 
-export default endointWrapper().get(handler);
+const bodySchema = Joi.object({
+  a: Joi.string().required(),
+});
+
+export default endointWrapper()
+  .use(validator({
+    body: bodySchema
+  }))
+  .put(handler);
 
 type GetResponse = {
   name: string
