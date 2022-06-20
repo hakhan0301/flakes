@@ -1,5 +1,5 @@
 {
-  "name": "@cereal/fetch-helpers",
+  "name": "@cereal/api-helpers",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",

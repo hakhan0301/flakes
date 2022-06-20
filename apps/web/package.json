@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@cereal/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cereal/api-helpers": "^1.0.0",
+    "add": "^2.0.6",
     "next": "12.1.6",
+    "next-connect": "^0.12.2",
+    "next-joi": "^2.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
