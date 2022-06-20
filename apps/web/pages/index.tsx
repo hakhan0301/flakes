@@ -1,6 +1,8 @@
 import type { NextPage, GetServerSideProps } from 'next'
 import type { CronJob } from '@cereal/db/types'
 import { prisma } from '@cereal/db'
+
+import { FaPlus } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io'
 import { useState } from 'react'
 
@@ -31,6 +33,19 @@ function CronJob({ title, cron, url, index, onDelete }: CronJobProps) {
       <p className='table-cell py-1 px-2'>{url}</p>
     </div>
   );
+}
+
+function CronForm() {
+  return (
+    <div className='table-row'>
+      <button className='table-cell w-1 py-1 pl-3 hover:text-teal-300' >
+        <FaPlus />
+      </button>
+      <p className='table-cell py-1 pr-2'>title</p>
+      <p className='table-cell py-1 px-2'>cron</p>
+      <p className='table-cell py-1 px-2'>url</p>
+    </div >
+  )
 }
 
 interface Props {
@@ -83,6 +98,7 @@ const Home: NextPage<Props> = ({ jobs: _jobs }) => {
           <div className="table-row-group">
             {jobs.map((job, i) => <CronJob key={job.title} index={i}
               onDelete={removeJob} {...job} />)}
+            < CronForm />
           </div>
         </div>
       </div>

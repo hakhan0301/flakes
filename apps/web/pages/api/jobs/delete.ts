@@ -12,9 +12,9 @@ const bodySchema = Joi.object({
 });
 
 export default endointWrapper()
-  .use(validator(
-    { body: bodySchema }
-  ))
+  .use(
+    validator({ body: bodySchema })
+  )
   .post(handler);
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
