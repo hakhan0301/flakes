@@ -1,33 +1,35 @@
-import cron from 'node-cron';
+import { CronJob } from 'cron';
+import fetch from 'node-fetch';
 
 import { prisma } from '@flakes/db/';
-import type { CronJob } from '@flakes/db/types';
+import type { CronJob as CronJobType } from '@flakes/db/types';
 
 interface CronJobDict {
-  [key: string]: cron.ScheduledTask;
+  [key: string]: CronJob;
 }
 const runningCronJobs: CronJobDict = {};
 
-export const scheduleCronJob = (cronJob: CronJob) => {
-  console.log('scheduled: ', cronJob.title);
+export const scheduleCronJob = (cronJob: CronJobType) => {
+  console.log('scheduling: ', cronJob.title);
 
+  const job = new CronJob(cronJob.cron, async () => {
+    console.log('running: ', cronJob.title);
 
-  const task = cron.schedule(cronJob.cron, async () => {
-    const res = await fetch(cronJob.url);
+    fetch(cronJob.url)
+      .then(res => res.text())
+      .then(res => console.log(`result from ${cronJob.title}: `, res));
+  }, null, true);
 
-    const json = await res.json();
-    console.log(`${cronJob.title} cron job executed`);
-    console.log(json);
-  });
+  job.start();
 
-  task.start();
-
-  runningCronJobs[cronJob.title] = task;
+  runningCronJobs[cronJob.title] = job;
 }
 
 export const removeCronJob = async (title: string) => {
-  const task = runningCronJobs[title];
-  task.stop();
+  console.log('removing: ', title);
+
+  const job = runningCronJobs[title];
+  job.stop();
   delete runningCronJobs[title];
 }
 

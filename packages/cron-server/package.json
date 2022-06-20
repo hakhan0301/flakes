@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "@flakes/db": "^1.0.0",
+    "cron": "^2.0.0",
     "node-cron": "^3.0.1"
   },
   "devDependencies": {
+    "@types/cron": "^2.0.0",
     "@types/node-cron": "^3.0.1"
   }
 }

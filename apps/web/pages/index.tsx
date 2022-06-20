@@ -4,7 +4,7 @@ import { prisma } from '@flakes/db'
 
 import { FaCheck } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // @ts-ignore
 import cronJoi from 'joi-cron-expression';
@@ -17,13 +17,6 @@ const bodySchema = Joi.object({
   cron: Joi.string().cron().required(),
   url: Joi.string().uri().required(),
 });
-
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const jobs = await prisma.cronJob.findMany();
-  return { props: { jobs } };
-}
-
 
 interface CronJobProps extends CronJob {
   index: number
@@ -117,11 +110,20 @@ function CronForm({ onSubmit }: CronFormProps) {
 interface Props {
   jobs: CronJob[]
 };
-const Home: NextPage<Props> = ({ jobs: _jobs }) => {
-  const [jobs, setJobs] = useState<CronJob[]>(_jobs);
+const Home: NextPage<Props> = () => {
+  const [jobs, setJobs] = useState<CronJob[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch('http://localhost:8000/api/jobs');
+      const json = await res.json();
+      setJobs(json);
+    }
+    fetchData();
+  }, [setJobs]);
 
   const removeJob = async (title: string) => {
-    await fetch('/api/jobs/delete', {
+    await fetch('http://localhost:8000/api/jobs/delete', {
       method: 'POST',
       body: JSON.stringify({ title }),
     });
@@ -129,7 +131,7 @@ const Home: NextPage<Props> = ({ jobs: _jobs }) => {
   }
 
   const addJob = async (title: string, cron: string, url: string) => {
-    const res = await fetch('/api/jobs/create', {
+    const res = await fetch('http://localhost:8000/api/jobs/create', {
       method: 'POST',
       body: JSON.stringify({ title, cron, url }),
     });
