@@ -2,9 +2,22 @@ import type { NextPage, GetServerSideProps } from 'next'
 import type { CronJob } from '@cereal/db/types'
 import { prisma } from '@cereal/db'
 
-import { FaPlus } from 'react-icons/fa';
+import { FaCheck } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io'
 import { useState } from 'react'
+
+// @ts-ignore
+import cronJoi from 'joi-cron-expression';
+import _Joi from 'joi';
+
+const Joi = cronJoi(_Joi);
+
+const bodySchema = Joi.object({
+  title: Joi.string().min(5).required(),
+  cron: Joi.string().cron().required(),
+  url: Joi.string().uri().required(),
+});
+
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const jobs = await prisma.cronJob.findMany();
@@ -50,22 +63,53 @@ function CronJob({ title, cron, url, index, onDelete }: CronJobProps) {
           <IoMdTrash />
         </button>
       </td>
-      <td><p className='table-cell py-1 pr-2'>{bgOpacity}{title}</p></td>
+      <td><p className='table-cell py-1 pr-2'>{title}</p></td>
       <td><p className='table-cell py-1 px-2'>{cron}</p></td>
       <td><p className='table-cell py-1 px-2'>{url}</p></td>
     </tr>
   );
 }
 
-function CronForm() {
+interface CronFormProps {
+  onSubmit: (title: string, cron: string, url: string) => Promise<void>
+}
+
+function CronForm({ onSubmit }: CronFormProps) {
+  const [title, setTitle] = useState('');
+  const [cron, setCron] = useState('');
+  const [url, setUrl] = useState('');
+
+  const submitForm = async () => {
+    const { error } = bodySchema.validate({ title, cron, url });
+    if (error) {
+      return;
+    }
+
+
+    await onSubmit(title, cron, url);
+    setTitle('');
+    setCron('');
+    setUrl('');
+  }
+
   return (
     <tr className=''>
-      <td className='w-full h-full group cursor-pointer'>
-        <FaPlus className='group-hover:text-purple-600 mx-auto' />
+      <td onClick={submitForm}
+        className='w-full h-full group cursor-pointer py-3'>
+        <FaCheck className='group-hover:text-purple-600 mx-auto' />
       </td>
-      <td><p className='py-1 pr-2'>title</p></td>
-      <td><p className='py-1 px-2'>cron</p></td>
-      <td><p className='py-1 px-2'>url</p></td>
+      <td className=''>
+        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
+          className='bg-yellow-100 rounded-md px-1 ' />
+      </td>
+      <td className='px-2'>
+        <input type="text" value={cron} onChange={(e) => setCron(e.target.value)}
+          className='bg-yellow-100 rounded-md px-1 ' />
+      </td>
+      <td className='px-2'>
+        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)}
+          className='bg-yellow-100 rounded-md px-1 ' />
+      </td>
     </tr >
   )
 }
@@ -74,7 +118,7 @@ interface Props {
   jobs: CronJob[]
 };
 const Home: NextPage<Props> = ({ jobs: _jobs }) => {
-  const [jobs, setJobs] = useState<CronJob[]>(_jobs.flatMap(job => [job, job, job, job, job, job]));
+  const [jobs, setJobs] = useState<CronJob[]>(_jobs);
 
   const removeJob = async (title: string) => {
     await fetch('/api/jobs/delete', {
@@ -82,6 +126,16 @@ const Home: NextPage<Props> = ({ jobs: _jobs }) => {
       body: JSON.stringify({ title }),
     });
     setJobs(jobs.filter(job => job.title !== title));
+  }
+
+  const addJob = async (title: string, cron: string, url: string) => {
+    const res = await fetch('/api/jobs/create', {
+      method: 'POST',
+      body: JSON.stringify({ title, cron, url }),
+    });
+
+    if (res.ok)
+      setJobs(jobs.concat({ title, cron, url }));
   }
 
 
@@ -120,7 +174,7 @@ const Home: NextPage<Props> = ({ jobs: _jobs }) => {
             {jobs.map((job, i) =>
               <CronJob key={job.title} index={i / jobs.length}
                 onDelete={removeJob} {...job} />)}
-            < CronForm />
+            < CronForm onSubmit={addJob} />
           </tbody>
         </table>
       </div>
