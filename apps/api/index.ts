@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
 import { prisma } from '@flakes/db';
 import { removeCronJob, scheduleCronJob, startupCronServer } from '@flakes/cron-server';
@@ -10,6 +11,9 @@ import _Joi from 'joi';
 const app = express();
 app.use(express.json({ type: '*/*', }));
 app.use(cors());
+
+app.use(express.static(path.join(__dirname, './public')))
+
 
 app.get('/api/jobs', async (req, res) => {
   const jobs = await prisma.cronJob.findMany();
