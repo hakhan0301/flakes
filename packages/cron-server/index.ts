@@ -17,7 +17,8 @@ export const scheduleCronJob = (cronJob: CronJobType) => {
 
     fetch(cronJob.url)
       .then(res => res.text())
-      .then(res => console.log(`result from ${cronJob.title}: `, res));
+      .then(res => console.log(`result from ${cronJob.title}: `, res))
+      .catch(console.error);
   }, null, true);
 
   job.start();
