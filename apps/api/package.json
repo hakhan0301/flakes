@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon -e ts --exec 'vite-node ./index.ts'"
+    "dev": "nodemon -e ts --exec 'vite-node ./index.ts'",
+    "start": "vite-node ./index.ts"
   },
   "author": "",
   "license": "ISC",
