@@ -6,17 +6,16 @@ COPY . .
 RUN npm install
 
 
-RUN cd ./packages/db
+WORKDIR /usr/src/app/packages/db
 RUN npx prisma db push
-RUN cd ../..
 
-RUN cd ./apps/webapp
+WORKDIR /usr/src/app/apps/webapp
 RUN npm run build
 
-RUN cd ..
+WORKDIR /usr/src/app/apps
 RUN cp -r ./webapp/build/* ./api/public/
 
-RUN cd ./api
+WORKDIR /usr/src/app/apps/api
 
 CMD [ "npm", "start" ]
 EXPOSE 8000
