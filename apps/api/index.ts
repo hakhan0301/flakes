@@ -7,20 +7,20 @@ import { removeCronJob, scheduleCronJob, startupCronServer } from '@flakes/cron-
 
 import cronJoi from 'joi-cron-expression';
 import _Joi from 'joi';
+const Joi = cronJoi(_Joi);
 
 const app = express();
 app.use(express.json({ type: '*/*', }));
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, './public')))
-
+app.use('/', express.static(path.join(__dirname, './public'), {
+  index: "index.html"
+}));
 
 app.get('/api/jobs', async (req, res) => {
   const jobs = await prisma.cronJob.findMany();
   res.json(jobs);
 });
-
-const Joi = cronJoi(_Joi);
 
 const createSchema = Joi.object({
   title: Joi.string().min(5).required(),
